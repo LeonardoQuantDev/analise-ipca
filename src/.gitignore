@@ -1,0 +1,8 @@
+pycache
+*.pyc
+*.db
+*.log
+.env
+data/ .csv
+.ipynb_checkpoints
+.DS_Store
