@@ -1,5 +1,5 @@
 # Analisador e Previsor de Indicadores Econômicos
-# Autor: [Seu Nome]
+# Autor: Leonardo da Silva
 # Descrição: Coleta de dados, análise exploratória e previsão com Regressão Linear.
 
 # -----------------------
