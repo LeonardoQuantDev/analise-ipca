@@ -20,12 +20,28 @@ from sklearn.metrics import mean_squared_error
 def get_sgs_data(series_id, start_date='2010-01-01'):
     url = f'https://api.bcb.gov.br/dados/serie/bcdata.sgs. {series_id}/dados?formato=json&dataInicial={start_date}'
     response = requests.get(url)
+    
+    if response.status_code != 200:
+        raise ConnectionError(f"Erro ao acessar API: {response.status_code}")
+        
     data = response.json()
+    
+    # Verifica se os dados têm conteúdo
+    if not data:
+        raise ValueError("Nenhum dado retornado pela API. Verifique o ID da série ou data inicial.")
+        
     df = pd.DataFrame(data)
+
+    # Tenta identificar a coluna correta com o valor (pode vir como 'Valor', 'valor', etc.)
+    value_col = next((col for col in df.columns if 'valor' in col.lower()), None)
+    if not value_col:
+        raise KeyError("Coluna 'valor' não encontrada na resposta da API.")
+
+    df.rename(columns={'data': 'data', value_col: 'valor'}, inplace=True)
     df['valor'] = df['valor'].astype(float)
     df['data'] = pd.to_datetime(df['data'], dayfirst=True)
-    return df
 
+    return df
 # -----------------------
 # ✅ Coletando dados: IPCA - série 433
 # -----------------------
